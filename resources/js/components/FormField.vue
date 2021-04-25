@@ -26,6 +26,7 @@
           :files="selectedFiles"
           :multiple="multipleSelect"
           :field="field"
+          :mediaId="mediaId"
         />
 
         <p :class="`${!isCompact && 'py-6'}`" :style="`padding-top: ${!isCompact && 9}px;`" v-else>
@@ -94,6 +95,7 @@
 </style>
 
 <script>
+import { Errors } from 'laravel-nova'
 import { FormField, HandlesValidationErrors } from 'laravel-nova';
 import debounce from '../debounce';
 
@@ -104,7 +106,20 @@ function isString(value) {
 export default {
   mixins: [FormField, HandlesValidationErrors],
 
-  props: ['resourceName', 'resourceId', 'field'],
+  props: {
+    resourceName: {
+      type: String,
+      required: false,
+    },
+    resourceId: {
+      type: String,
+      required: false,
+    },
+    field: {
+      type: String,
+      required: false,
+    },
+  },
 
   data() {
     return {
@@ -119,6 +134,12 @@ export default {
   },
 
   watch: {
+    activeFile: function(value) {
+      if (!value) {
+        return;
+      }
+    },
+
     selectedFiles: function (value) {
       if (!value || !Array.isArray(value) || !window.mediaLibrary.loadedFiles) return;
       window.mediaLibrary.loadedFiles = [

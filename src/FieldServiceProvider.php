@@ -1,15 +1,17 @@
 <?php
 
-namespace OptimistDigital\MediaField;
+namespace Frontkom\NovaMediaLibrary;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
-use OptimistDigital\MediaField\Classes\MediaHandler;
-use OptimistDigital\MediaField\Commands\OptimizeOriginals;
-use OptimistDigital\MediaField\Commands\RegenerateThumbnails;
-use OptimistDigital\MediaField\Commands\RegenerateWebp;
+use Frontkom\NovaMediaLibrary\Http\Controllers\IndexController;
+use Frontkom\NovaMediaLibrary\Classes\MediaHandler;
+use Frontkom\NovaMediaLibrary\Commands\OptimizeOriginals;
+use Frontkom\NovaMediaLibrary\Commands\RegenerateThumbnails;
+use Frontkom\NovaMediaLibrary\Commands\RegenerateWebp;
 
 class FieldServiceProvider extends ServiceProvider
 {
@@ -21,22 +23,22 @@ class FieldServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/nova-media-field.php' => config_path('nova-media-field.php'),
+            __DIR__ . '/../config/nova-global-media-library.php' => config_path('nova-global-media-library.php'),
         ]);
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/nova-media-field.php',
-            'nova-media-field'
+            __DIR__ . '/../config/nova-global-media-library.php',
+            'nova-global-media-library'
         );
 
         $this->publishes([
-            __DIR__ . '/../config/nova-media-field.php' => config_path('nova-media-field.php'),
+            __DIR__ . '/../config/nova-global-media-library.php' => config_path('nova-global-media-library.php'),
         ], 'config');
 
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
 
-        Validator::extend('height', '\OptimistDigital\MediaField\Classes\MediaValidator@height');
+        Validator::extend('height', '\Frontkom\NovaMediaLibrary\Classes\MediaValidator@height');
 
         Nova::serving(function (ServingNova $event) {
             Nova::script('media-field', __DIR__ . '/../dist/js/field.js');
@@ -46,7 +48,7 @@ class FieldServiceProvider extends ServiceProvider
         });
 
         Nova::resources([
-            config('nova-media-field.media_resource', Media::class)
+            config('nova-global-media-library.media_resource', Media::class)
         ]);
 
         $this->commands([
@@ -58,6 +60,18 @@ class FieldServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nova-media');
     }
 
+    public function routes(): void
+    {
+        if ($this->app->routesAreCached()) {
+            return;
+        }
+
+        Route::middleware(['nova'])
+            ->prefix('nova-vendor/frontkom/media-library')
+            ->group(function (): void {
+                Route::get('{resource}/{resourceId}/media/{field}', IndexController::class);
+            });
+    }
 
     /**
      * Register any application services.
@@ -67,7 +81,7 @@ class FieldServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(MediaHandler::class, function () {
-            $mediaHandler = config('nova-media-field.media_handler', MediaHandler::class);
+            $mediaHandler = config('nova-global-media-library.media_handler', MediaHandler::class);
             return new $mediaHandler;
         });
     }

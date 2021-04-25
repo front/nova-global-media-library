@@ -1,8 +1,7 @@
 <?php
 
-
-Route::get('/api/media/find', '\OptimistDigital\MediaField\Controllers\MediaController@findFiles');
-Route::post('/api/media/upload', '\OptimistDigital\MediaField\Controllers\MediaController@uploadFile');
-Route::post('/api/media/update', '\OptimistDigital\MediaField\Controllers\MediaController@updateFile');
-Route::get('/api/media', '\OptimistDigital\MediaField\Controllers\MediaController@getFiles');
+Route::get('/api/media/find', '\Frontkom\NovaMediaLibrary\Controllers\MediaController@findFiles');
+Route::post('/api/media/upload', '\Frontkom\NovaMediaLibrary\Controllers\MediaController@uploadFile');
+Route::post('/api/media/update', '\Frontkom\NovaMediaLibrary\Controllers\MediaController@updateFile');
+Route::get('/api/media', '\Frontkom\NovaMediaLibrary\Controllers\MediaController@getFiles');
 

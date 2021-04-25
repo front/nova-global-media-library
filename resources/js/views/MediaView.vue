@@ -368,11 +368,6 @@ export default {
     }
   },
 
-  beforeRouteUpdate(to, from, next) {
-    next();
-    this.initializeState(false);
-  },
-
   /**
    * Unbind the keydown even listener when the component is destroyed
    */
@@ -404,6 +399,7 @@ export default {
       }
       this.deleteResources(data);
     },
+
 
     /**
      * Handle the keydown event

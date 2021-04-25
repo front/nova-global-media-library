@@ -1,13 +1,13 @@
 <?php
 
-namespace OptimistDigital\MediaField\Controllers;
+namespace Frontkom\NovaMediaLibrary\Controllers;
 
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use OptimistDigital\MediaField\Models\Media;
-use OptimistDigital\MediaField\Classes\MediaHandler;
-use OptimistDigital\MediaField\Requests\StoreMediaRequest;
+use Frontkom\NovaMediaLibrary\Models\Media;
+use Frontkom\NovaMediaLibrary\Classes\MediaHandler;
+use Frontkom\NovaMediaLibrary\Requests\StoreMediaRequest;
 
 class MediaController extends Controller
 {
@@ -39,6 +39,10 @@ class MediaController extends Controller
         $media = null;
         if (is_numeric($request->get('id'))) $media = Media::whereId($request->get('id'))->firstOrFail();
 
+        $media->file_attributes = [
+            'title' =>  $request->get('title'),
+            'alt' => $request->get('alt'),
+        ];
         $media->title = $request->get('title');
         $media->alt = $request->get('alt');
         $media->save();

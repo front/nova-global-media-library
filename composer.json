@@ -1,21 +1,27 @@
 {
-  "name": "optimistdigital/nova-media-field",
+  "name": "frontkom/nova-global-media-library",
   "description": "Laravel Nova field for image/gallery upload and library browsing.",
   "keywords": [
     "laravel",
     "nova",
-    "optimistdigital",
-    "media"
+    "media",
+    "library",
+    "frontkom"
   ],
   "authors": [
     {
       "name": "Marttin Notta",
       "email": "marttinnotta@optimistdigital.com",
+      "role": "Original Developer"
+    },
+    {
+      "name": "Michał Środek",
+      "email": "michal.srodek@frontkom.com",
       "role": "Developer"
     },
     {
-      "name": "Optimist Digital",
-      "email": "info@optimistdigital.com",
+      "name": "Frontkom",
+      "email": "hello@frontkom.com",
       "role": "Maintainer"
     }
   ],
@@ -28,7 +34,7 @@
   },
   "autoload": {
     "psr-4": {
-      "OptimistDigital\\MediaField\\": [
+      "Frontkom\\NovaMediaLibrary\\": [
         "src/"
       ]
     }
@@ -36,7 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "OptimistDigital\\MediaField\\FieldServiceProvider"
+        "Frontkom\\NovaMediaLibrary\\FieldServiceProvider"
       ]
     }
   },

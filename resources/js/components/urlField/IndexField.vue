@@ -12,11 +12,6 @@ import Link from './Link';
 export default {
   props: ['resourceName', 'field'],
   components: { CopyIcon, Link },
-  mounted() {
-    document.querySelectorAll('table tr td:last-child span:nth-child(2)').forEach(node => {
-      node.parentNode.removeChild(node);
-    });
-  },
   methods: {
     async copyToClipboard() {
       await this.$copyText(this.field.value);

@@ -1,6 +1,14 @@
 <template>
   <div :class="`preview-container ${multiple ? 'multiple-preview' : ''}`" :style="compactPreviewStyles">
-    <media-edit-modal :isModalOpen.sync="isModalOpen" :file="editingFile" />
+    <EditModal
+        v-if="isModalOpen"
+        resource-name="news"
+        :resource-id="mediaId"
+        :fields="customFields"
+        :errors="errors"
+        @close="isModalOpen=false"
+        @refresh="refresh"
+    />
 
     <draggable
       v-if="files && files.length && multiple && ordering"
@@ -43,6 +51,8 @@
 
 <script>
 import draggable from 'vuedraggable';
+import EditModal from './Modals/Edit';
+import { Errors } from 'laravel-nova'
 
 export default {
   props: {
@@ -66,10 +76,29 @@ export default {
       default: [],
       required: false,
     },
+    mediaId: {
+      type: Number,
+      default: 0,
+      required:true,
+    },
     field: {
       type: Object,
       default: {},
       required: true,
+    },
+    media: {
+      type: Object,
+      required: true,
+    },
+    customFields: {
+      type: Array,
+      default: [],
+      required: false,
+    },
+    errors: {
+      type: Object,
+      default: new Errors(),
+      required: false,
     },
   },
 
@@ -83,21 +112,41 @@ export default {
 
   components: {
     draggable,
+    EditModal,
   },
 
   methods: {
+
     onDrageEnd() {
       this.drag = false;
       this.changeOrder(this.files);
     },
+
+
+    async getFieldData() {
+      this.customFields = await Nova.request().get('/nova-api/media/' + this.mediaId +'/update-fields?simple=1').then(function(response) {
+        return Object.values(response.data.fields)
+      });
+      this.isModalOpen = true;
+    },
+
     onClick(file) {
+      this.mediaId = file.data.id;
+      this.getFieldData();
+
       if (this.field) {
         this.editingFile = file;
-        this.isModalOpen = true;
       }
+
     },
     compactHeight() {
       return Array.isArray(this.dimensions) && (this.dimensions[1] || this.dimensions[0]);
+    },
+
+    refresh( mediaId) {
+      if (mediaId) {
+        this.mediaId = mediaId;
+      }
     },
   },
 

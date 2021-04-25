@@ -18,11 +18,17 @@ return [
 
     'collections' => [],
 
-    'storage_driver' => config('filesystems.default'),
+    'storage_disk' => 'media',
 
     'storage_path' => 'public/media/',
 
-    'media_handler' => \OptimistDigital\MediaField\Classes\MediaHandler::class,
+    'media_handler' => \Frontkom\NovaMediaLibrary\Classes\MediaHandler::class,
 
-    'media_resource' => \OptimistDigital\MediaField\Media::class,
+    'media_resource' => \Frontkom\NovaMediaLibrary\Media::class,
+
+    'types' => [
+        'default' => [
+
+        ],
+    ],
 ];

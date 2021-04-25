@@ -1,9 +1,9 @@
 <?php
 
-namespace OptimistDigital\MediaField;
+namespace Frontkom\NovaMediaLibrary;
 
 use Laravel\Nova\Fields\Field;
-use OptimistDigital\MediaField\Models\Media;
+use Frontkom\NovaMediaLibrary\Models\Media;
 
 
 class MediaField extends Field
@@ -14,6 +14,8 @@ class MediaField extends Field
      * @var string
      */
     public $component = 'media-field';
+
+    public $fieldsCallback;
 
     protected $multiple = false;
 
@@ -63,7 +65,7 @@ class MediaField extends Field
             'multiple' => $this->multiple,
             'order' => $this->multiple,
             'displayCollection' => $this->collection,
-            'collections' => config('nova-media-field.collections'),
+            'collections' => config('nova-global-media-library.collections'),
             'detailThumbnailSize' => $this->detailThumbnailSize
         ]);
     }
@@ -79,5 +81,11 @@ class MediaField extends Field
         return $query->first();
     }
 
+    public function fields(callable $callback): self
+    {
+        $this->fieldsCallback = $callback;
+
+        return $this;
+    }
 
 }

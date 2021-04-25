@@ -1,7 +1,6 @@
 <?php
 
-
-namespace OptimistDigital\MediaField;
+namespace Frontkom\NovaMediaLibrary;
 
 use Laravel\Nova\Tool;
 
@@ -19,6 +18,6 @@ class NovaMediaLibrary extends Tool
             'width' => 150,
             'height' => 150,
             'crop' => true,
-        ]], config('nova-media-field.image_sizes', []));
+        ]], config('nova-global-media-library.image_sizes', []));
     }
 }

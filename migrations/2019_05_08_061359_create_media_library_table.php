@@ -23,6 +23,7 @@ class CreateMediaLibraryTable extends Migration
             $table->unsignedInteger('file_size');
             $table->json('data')->nullable();
             $table->json('image_sizes')->nullable();
+            $table->json('file_attributes')->nullable();
             $table->timestamps();
         });
     }

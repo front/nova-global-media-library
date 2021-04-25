@@ -1,5 +1,5 @@
 <?php
-namespace OptimistDigital\MediaField\Filters;
+namespace Frontkom\NovaMediaLibrary\Filters;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
@@ -29,7 +29,7 @@ class Collection extends Filter
     {
         $options = [];
 
-        foreach (config('nova-media-field.collections') as $key => $value) {
+        foreach (config('nova-global-media-library.collections') as $key => $value) {
             $options[$value['label']] = $key;
         }
         

@@ -1,9 +1,8 @@
-# Nova Media Field
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/optimistdigital/nova-media-field.svg?style=flat-square)](https://packagist.org/packages/optimistdigital/nova-media-field)
-[![Total Downloads](https://img.shields.io/packagist/dt/optimistdigital/nova-media-field.svg?style=flat-square)](https://packagist.org/packages/optimistdigital/nova-media-field)
+# Nova Global Media Library
 
 This [Laravel Nova](https://nova.laravel.com) package adds a simple image/gallery upload field with a media browser to Laravel Nova.
+
+It is a fork of very good package [optimistdigital/nova-media-field](https://github.com/optimistdigital/nova-media-field)
 
 ## Requirements
 
@@ -19,7 +18,9 @@ This [Laravel Nova](https://nova.laravel.com) package adds a simple image/galler
 - Collections
 - Thumbnail generator with custom sizes (also re-generation via command)
 - WebP generator (also re-generation via command)
-- Works with [nova-translatable](https://github.com/optimistdigital/nova-translatable)
+- Dynamic fields support
+- Works well with Amazon S3
+
 
 ## Installation
 
@@ -27,7 +28,7 @@ Install the package in a Laravel Nova project via Composer and run migrations:
 
 ```bash
 # Install package
-composer require optimistdigital/nova-media-field
+composer require front/nova-global-media-library
 
 # And then run migrations
 php artisan migrate
@@ -36,12 +37,12 @@ php artisan migrate
 And then register the `NovaMediaLibrary` tool in `NovaServiceProvider`:
 
 ```php
-use OptimistDigital\MediaField\NovaMediaLibrary;
+use Frontkom\NovaMediaLibrary\NovaMediaLibrary;
 
 public function tools()
 {
     return [
-        new \OptimistDigital\MediaField\NovaMediaLibrary,
+        new NovaMediaLibrary(),
     ];
 }
 ```
@@ -49,7 +50,7 @@ public function tools()
 ## Usage
 
 ```php
-use OptimistDigital\MediaField\MediaField;
+use use Frontkom\NovaMediaLibrary\MediaField;;
 
 // ...
 
@@ -72,7 +73,7 @@ Image thumbnails define different conversions for uploaded images. These convers
 under media field config file under `image_sizes` key.
 
 ```php
-# config/nova-media-field.php
+# config/nova-global-media-library.php
 
 [
     'image_sizes' => [
@@ -140,7 +141,7 @@ Collections are basically upload groups that can have their own set of upload ru
 Collection configuration goes under media field config file under `collection` key.
 
 ```
-# config/nova-media-field.php
+# config/nova-global-media-library.php
 
 [
     'collections' => [
@@ -169,7 +170,8 @@ Collection configuration goes under media field config file under `collection` k
 
 - [Marttin Notta](https://github.com/marttinnotta)
 - [Tarvo Reinpalu](https://github.com/Tarpsvo)
+- [Michał Środek](https://github.com/michalsrodek)
 
 ## License
 
-Nova Media Field is open-sourced software licensed under the [MIT license](LICENSE.md).
+Nova Global Media Library is open-sourced software licensed under the [MIT license](LICENSE.md).

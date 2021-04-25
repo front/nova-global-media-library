@@ -1,6 +1,6 @@
 <?php
 
-namespace OptimistDigital\MediaField\Classes;
+namespace Frontkom\NovaMediaLibrary\Classes;
 
 use Exception;
 use FFMpeg\FFMpeg;
@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use FFMpeg\Coordinate\TimeCode;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use OptimistDigital\MediaField\Models\Media;
-use OptimistDigital\MediaField\NovaMediaLibrary;
+use Frontkom\NovaMediaLibrary\Models\Media;
+use Frontkom\NovaMediaLibrary\NovaMediaLibrary;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class MediaHandler
@@ -108,13 +108,13 @@ class MediaHandler
      */
     public function generateImageSizes($tempFilePath, $path, $mimeType, $disk): array
     {
-        $webpEnabled = config('nova-media-field.webp_enabled', true);
+        $webpEnabled = config('nova-global-media-library.webp_enabled', true);
         $origName = pathinfo($path, PATHINFO_FILENAME);
         $origExtension = pathinfo($path, PATHINFO_EXTENSION);
 
         // Is video
         $isVideo = Str::startsWith($mimeType, 'video');
-        if ($isVideo && !config('nova-media-field.generate_video_thumbnails', false)) return [];
+        if ($isVideo && !config('nova-global-media-library.generate_video_thumbnails', false)) return [];
 
         $sizes = [];
         foreach (NovaMediaLibrary::getImageSizes() as $sizeName => $config) {
@@ -185,7 +185,7 @@ class MediaHandler
      */
     protected function getUploadPath($disk): string
     {
-        $subPath = config('nova-media-field.storage_path') . date('Y') . '/' . date('m') . '/';
+        $subPath = config('nova-global-media-library.storage_path') . date('Y') . '/' . date('m') . '/';
         if (!$disk->exists($subPath)) $disk->makeDirectory($subPath);
         return $subPath;
     }
@@ -197,7 +197,7 @@ class MediaHandler
      */
     public function getDisk()
     {
-        return Storage::disk(config('nova-media-field.storage_driver'));
+        return Storage::disk('s3');
     }
 
     /**
@@ -274,7 +274,7 @@ class MediaHandler
     {
         [$filename, $tmpName, $tmpPath, $collection, $alt, $mimeType] = $this->validateFileInput($fileData);
 
-        $webpEnabled = config('nova-media-field.webp_enabled', true);
+        $webpEnabled = config('nova-global-media-library.webp_enabled', true);
         $storagePath = ltrim($this->getUploadPath($disk), '/');
         $origFilename = $this->normalizeFileName(pathinfo($filename, PATHINFO_FILENAME));
         $origExtension = pathinfo($filename, PATHINFO_EXTENSION);
@@ -296,7 +296,7 @@ class MediaHandler
             $image = Image::make($origFile);
 
             // If max resize is enabled
-            $maxOriginalDimension = config('nova-media-field.max_original_image_dimensions', null);
+            $maxOriginalDimension = config('nova-global-media-library.max_original_image_dimensions', null);
             if (!empty($maxOriginalDimension)) {
                 $image = $image->resize($maxOriginalDimension, $maxOriginalDimension, function ($constraint) {
                     $constraint->aspectRatio();

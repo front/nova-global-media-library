@@ -1,10 +1,9 @@
 <?php
 
-namespace OptimistDigital\MediaField\Requests;
+namespace Frontkom\NovaMediaLibrary\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\App;
-use OptimistDigital\MediaField\Classes\MediaValidator;
 
 class StoreMediaRequest extends FormRequest
 {
@@ -16,9 +15,9 @@ class StoreMediaRequest extends FormRequest
 
             $collectionSlug = $this->get('collection');
 
-            if (!empty(config('nova-media-field.collections')[$collectionSlug])) {
+            if (!empty(config('nova-global-media-library.collections')[$collectionSlug])) {
 
-                $collection = config('nova-media-field.collections')[$collectionSlug];
+                $collection = config('nova-global-media-library.collections')[$collectionSlug];
 
                 if (isset($collection['constraints'])) {
 

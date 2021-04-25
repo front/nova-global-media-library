@@ -1,6 +1,6 @@
 <?php
 
-namespace OptimistDigital\MediaField\Models;
+namespace Frontkom\NovaMediaLibrary\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -24,14 +24,19 @@ class Media extends Model
 
     protected $appends = ['url', 'webp_url'];
 
+    private function getStorageDisk(): string
+    {
+        return config('nova-global-media-library.storage_disk', 'public');
+    }
+
     public function getUrlAttribute()
     {
-        return config('app.url') . Storage::url($this->path . $this->file_name);
+        return Storage::disk($this->getStorageDisk())->url($this->path . $this->file_name);
     }
 
     public function getWebpUrlAttribute()
     {
-        return !empty($this->webp_name) ? config('app.url') . Storage::url($this->path . $this->webp_name) : null;
+        return !empty($this->webp_name) ? Storage::disk($this->getStorageDisk())->url($this->path . $this->webp_name) : null;
     }
 
     public function getImageSizesAttribute($value)
@@ -39,9 +44,9 @@ class Media extends Model
         $sizes = json_decode($value, true) ?? [];
 
         foreach ($sizes as $key => $size) {
-            $sizes[$key]['url'] = config('app.url') . Storage::url($this->path . $size['file_name']);
-            if (config('nova-media-field.webp_enabled', true) && isset($size['webp_name'])) {
-                $sizes[$key]['webp_url'] = config('app.url') . Storage::url($this->path . $size['webp_name']);
+            $sizes[$key]['url'] = Storage::disk($this->getStorageDisk())->url($this->path . $size['file_name']);
+            if (config('nova-global-media-library.webp_enabled', true) && isset($size['webp_name'])) {
+                $sizes[$key]['webp_url'] = Storage::disk($this->getStorageDisk())->url($this->path . $size['webp_name']);
             }
         }
 
@@ -51,16 +56,16 @@ class Media extends Model
     public function getThumbnailPathAttribute()
     {
         $thumbnailFileName = $this->image_sizes['thumbnail']['file_name'] ?? null;
-        return $thumbnailFileName ? str_replace('public/', '', $this->path) . $thumbnailFileName : $this->getFilePathAttribute();
+        return $thumbnailFileName ? $this->path . $thumbnailFileName : $this->getFilePathAttribute();
     }
 
     public function getFilePathAttribute()
     {
-        return str_replace('public/', '', $this->path) . $this->file_name;
+        return $this->path . $this->file_name;
     }
 
-    public function getDataAttribute($value)
+    public function getFileAttributes($value)
     {
-        return json_decode($value, true);
+        return json_decode($value, true) ?? [];
     }
 }

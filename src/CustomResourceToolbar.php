@@ -1,6 +1,6 @@
 <?php
 
-namespace OptimistDigital\MediaField;
+namespace Frontkom\NovaMediaLibrary;
 use Laravel\Nova\ResourceTool;
 
 class CustomResourceToolbar extends ResourceTool

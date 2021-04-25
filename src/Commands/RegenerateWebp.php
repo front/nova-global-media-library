@@ -1,10 +1,10 @@
 <?php
 
-namespace OptimistDigital\MediaField\Commands;
+namespace Frontkom\NovaMediaLibrary\Commands;
 
 use Illuminate\Console\Command;
-use OptimistDigital\MediaField\Classes\MediaHandler;
-use OptimistDigital\MediaField\Models\Media;
+use Frontkom\NovaMediaLibrary\Classes\MediaHandler;
+use Frontkom\NovaMediaLibrary\Models\Media;
 use Intervention\Image\Facades\Image;
 
 class RegenerateWebp extends Command

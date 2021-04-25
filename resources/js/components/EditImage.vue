@@ -30,26 +30,6 @@
       />
     </div>
 
-    <div class="form-field">
-      <label class="text-80 leading-tight">Title</label>
-      <input
-        type="text"
-        class="w-full form-control form-input form-input-bordered"
-        v-on:input="onDataUpdate"
-        v-model="file.title"
-      />
-    </div>
-
-    <div class="form-field">
-      <label class="text-80 leading-tight">Alt text</label>
-      <textarea
-        v-on:input="onDataUpdate"
-        v-model="file.alt"
-        rows="2"
-        class="w-full form-control form-input form-input-bordered py-3 h-auto"
-      ></textarea>
-    </div>
-
     <div class="label-field">
       <label class="text-80 leading-tight">
         <span>Collection:</span>
@@ -60,7 +40,6 @@
 </template>
 
 <script>
-import debounce from './../debounce';
 
 export default {
   props: {
@@ -74,20 +53,6 @@ export default {
   data: () => ({
     //
   }),
-
-  methods: {
-    onDataUpdate() {
-      this.updateImageData(this.file);
-    },
-
-    updateImageData: debounce(file => {
-      axios.post('/api/media/update', {
-        id: file.id,
-        title: file.title,
-        alt: file.alt,
-      });
-    }, 500),
-  },
 };
 </script>
 

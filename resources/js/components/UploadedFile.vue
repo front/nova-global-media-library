@@ -2,7 +2,6 @@
   <div
     :class="`uploaded-file ${active ? 'active' : ''} ${selected ? 'selected' : ''}`"
     :style="compactStyles"
-    @click="onClick"
   >
     <div v-if="progress !== -1" class="upload-progress">
       <div class="progress-bar">
@@ -10,7 +9,7 @@
       </div>
     </div>
 
-    <div class="thumbnail-container" v-if="file.image_sizes !== void 0">
+    <div class="thumbnail-container" v-if="file.image_sizes !== void 0" @click="onClick">
       <img v-if="fileThumbnail" draggable="false" :src="fileThumbnail" />
       <thumbnail-video-icon icon="video-icon" class="thumbnail-placeholder" v-if="!fileThumbnail" />
     </div>
@@ -18,15 +17,23 @@
     <div class="checked-box" v-if="selected">
       <checkbox :checked="selected" />
     </div>
+    <!--MediaItemActions :media="file" class="media-item-actions dragging:hidden" /-->
 
     <div class="uploaded-file-name" v-if="file.file_name && !hideName">
       {{ file.file_name || '' }}
     </div>
+
+
   </div>
 </template>
 
 <script>
+import MediaItemActions from './MediaItemActions';
+
 export default {
+  components: {
+  },
+
   props: {
     hideName: {
       type: Boolean,
@@ -58,6 +65,20 @@ export default {
       default: false,
       required: false,
     },
+    media: {
+      type: Object,
+      required: true,
+    },
+    mediaId: {
+      type: Number,
+      default: 0,
+      required:true,
+    },
+    customFields: {
+      type: Array,
+      default: [],
+      required: false,
+    },
   },
 
   data: () => ({
@@ -73,6 +94,19 @@ export default {
     },
     compactHeight() {
       return Array.isArray(this.dimensions) && (this.dimensions[1] || this.dimensions[0]);
+    },
+
+    refresh( mediaId) {
+      if (mediaId) {
+        this.mediaId = mediaId;
+      }
+    },
+
+  },
+
+  watch: {
+    file(value) {
+      this.refresh(value.id);
     },
   },
 
@@ -90,6 +124,11 @@ export default {
       };
     },
   },
+
+  mounted() {
+    this.refresh(this.file.id);
+  },
+
 };
 </script>
 
@@ -108,7 +147,6 @@ export default {
   position: relative;
   transition: box-shadow 0.2s, border-color 0.2s;
   overflow: hidden;
-  cursor: pointer;
 
   .uploaded-file-name {
     padding: 4px 5px;
@@ -123,13 +161,6 @@ export default {
     text-overflow: ellipsis;
     font-weight: bold;
     text-align: center;
-  }
-
-  &:hover {
-    .thumbnail-container {
-      box-shadow: 0 0 5px rgba(#4099de, 0.5);
-      border-color: #4099de;
-    }
   }
 
   &.selected {
@@ -155,6 +186,12 @@ export default {
     overflow: hidden;
     border: 1px solid transparent;
     box-shadow: 0 0 5px rgba(#4099de, 0);
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(#4099de, 0.5);
+      border-color: #4099de;
+    }
   }
 
   img,
